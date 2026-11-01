@@ -67,16 +67,16 @@ API keys, access tokens, database passwords, and confidential invoice documents 
 ## Project Screenshots
 
 ### Invoice Dashboard
-![Invoice Dashboard](screenshots/dashboard.png)
+![Invoice Dashboard](screenshots/Invoice Dashboard - Fetch Invoices.png)
 
 ### Invoice Upload
-![Invoice Upload](screenshots/invoice-upload.png)
+![Invoice Upload](screenshots/AI-Powered Intelligent Invoice Processing & Approval Automation.png)
 
 ### n8n Workflow
-![Invoice Workflow](screenshots/invoice-workflow.png)
+![Invoice Workflow](screenshots/Invoice Automation - Error Handling.png)
 
 ### Approval Queue
-![Approval Queue](screenshots/approval-queue.png)
+![Approval Queue](screenshots/Invoice Approval - Update Status.png)
 
 ## Author
 
