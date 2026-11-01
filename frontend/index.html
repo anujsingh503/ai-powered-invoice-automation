@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InvoiceFlow | Intelligent Invoice Processing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">IF</div>
+        <div><strong>InvoiceFlow</strong><span>AI WORKSPACE</span></div>
+      </div>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="nav">
+        <button class="nav-link active" data-view="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-link" data-view="invoices"><span>▤</span> All Invoices</button>
+        <button class="nav-link" data-view="upload"><span>⇧</span> Upload Invoice</button>
+        <button class="nav-link" data-view="approvals"><span>✓</span> Approval Queue <i id="pending-nav-count">3</i></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><div class="help-icon">✦</div><strong>AI processing</strong><p>Invoices are extracted, checked and routed automatically.</p><span class="online-dot"></span> System ready</div>
+        <button class="nav-link settings-link" data-view="settings"><span>⚙</span> Settings</button>
+        <div class="profile"><div class="avatar">AS</div><div><strong>Admin User</strong><span>Workspace admin</span></div><span class="more">···</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobile-menu" aria-label="Open menu">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb-current">Dashboard</strong></div>
+        <div class="top-actions"><span class="system-status"><b></b> All systems operational</span><button class="icon-btn" title="Notifications">♧<em></em></button><div class="avatar small">AS</div></div>
+      </header>
+
+      <section class="page-view active" id="view-dashboard">
+        <div class="page-heading"><div><div class="eyebrow">OVERVIEW</div><h1>Good morning, Admin <span>✦</span></h1><p>Here’s what’s happening with your invoices today.</p></div><button class="primary-btn" data-go="upload">＋ Upload invoice</button></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total invoices</span><span class="stat-icon blue">▤</span></div><strong id="stat-total">128</strong><div class="stat-foot"><span class="trend positive">↗ 12.8%</span> <span>vs last month</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Pending approval</span><span class="stat-icon amber">◷</span></div><strong id="stat-pending">3</strong><div class="stat-foot"><span class="muted">Needs your attention</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Approved</span><span class="stat-icon green">✓</span></div><strong id="stat-approved">112</strong><div class="stat-foot"><span class="trend positive">↗ 8.4%</span> <span>vs last month</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Total invoice value</span><span class="stat-icon purple">₹</span></div><strong id="stat-value">₹24.8L</strong><div class="stat-foot"><span class="muted">Across all invoices</span></div></article>
+        </div>
+        <div class="content-grid">
+          <section class="panel recent-panel"><div class="panel-heading"><div><h2>Recent invoices</h2><p>Latest documents processed in your workspace</p></div><button class="text-btn" data-go="invoices">View all invoices →</button></div><div class="table-wrap"><table><thead><tr><th>INVOICE</th><th>VENDOR</th><th>DATE</th><th>AMOUNT</th><th>STATUS</th></tr></thead><tbody id="recent-table"></tbody></table></div></section>
+          <section class="panel activity-panel"><div class="panel-heading"><div><h2>Activity</h2><p>Latest workflow updates</p></div><span class="live-pill">LIVE</span></div><div class="activity-list" id="activity-list"><div class="activity-item"><span class="activity-dot green-dot">✓</span><div><strong>Invoice approved</strong><p>INV-2025-108 · Acme Supplies</p><small>12 minutes ago</small></div></div><div class="activity-item"><span class="activity-dot blue-dot">✦</span><div><strong>AI extraction completed</strong><p>Invoice details successfully extracted</p><small>38 minutes ago</small></div></div><div class="activity-item"><span class="activity-dot amber-dot">◷</span><div><strong>Approval requested</strong><p>INV-2025-112 · Bright Office</p><small>1 hour ago</small></div></div></div></section>
+        </div>
+        <section class="panel approval-preview"><div class="panel-heading"><div><h2>Needs your approval</h2><p>Review invoices waiting for a decision</p></div><button class="text-btn" data-go="approvals">Open approval queue →</button></div><div id="approval-preview-list" class="approval-list"></div></section>
+      </section>
+
+      <section class="page-view" id="view-upload">
+        <div class="page-heading"><div><div class="eyebrow">DOCUMENT INTAKE</div><h1>Upload invoice</h1><p>Upload a PDF invoice to extract and validate its details with AI.</p></div></div>
+        <div class="upload-layout">
+          <section class="panel upload-panel"><div class="upload-dropzone" id="drop-zone"><div class="upload-symbol">⇧</div><h2>Drop your invoice PDF here</h2><p>or choose a file from your computer</p><label class="secondary-btn" for="invoice-file">Choose PDF file</label><input id="invoice-file" type="file" accept="application/pdf,.pdf" hidden><small>PDF files only · Maximum size 10 MB</small></div><div id="upload-feedback" class="feedback">No file selected yet.</div><div class="upload-note"><span>✦</span><div><strong>AI-powered extraction</strong><p>Vendor name, invoice number, dates, tax and line items will be identified automatically once connected to n8n.</p></div></div></section>
+          <section class="panel process-panel"><h2>What happens next?</h2><div class="process-step"><span>1</span><div><strong>Document extraction</strong><p>AI reads invoice fields and line items.</p></div></div><div class="process-step"><span>2</span><div><strong>Data validation</strong><p>Check required fields, totals and duplicates.</p></div></div><div class="process-step"><span>3</span><div><strong>Approval routing</strong><p>Send the invoice to the right approval queue.</p></div></div><div class="process-step"><span>4</span><div><strong>Save and notify</strong><p>Store the record and notify the team.</p></div></div></section>
+        </div>
+      </section>
+
+      <section class="page-view" id="view-invoices">
+        <div class="page-heading"><div><div class="eyebrow">DOCUMENT REGISTER</div><h1>All invoices</h1><p>Search and track every invoice in your workspace.</p></div><button class="primary-btn" data-go="upload">＋ Upload invoice</button></div>
+        <section class="panel"><div class="toolbar"><input id="invoice-search" class="search-input" placeholder="⌕  Search invoice or vendor..."><select id="status-filter"><option value="all">All statuses</option><option>Pending</option><option>Approved</option><option>Rejected</option><option>Processing</option></select></div><div class="table-wrap"><table><thead><tr><th>INVOICE</th><th>VENDOR</th><th>INVOICE DATE</th><th>DUE DATE</th><th>AMOUNT</th><th>STATUS</th></tr></thead><tbody id="invoice-table"></tbody></table></div></section>
+      </section>
+
+      <section class="page-view" id="view-approvals">
+        <div class="page-heading"><div><div class="eyebrow">REVIEW CENTER</div><h1>Approval queue</h1><p>Review extracted invoice details and make an approval decision.</p></div></div>
+        <section class="panel"><div class="panel-heading"><div><h2>Pending decisions</h2><p>Invoices waiting for manual review</p></div><span class="count-pill" id="approval-count">3 pending</span></div><div id="approval-list-full" class="approval-list full"></div></section>
+      </section>
+
+      <section class="page-view" id="view-settings"><div class="page-heading"><div><div class="eyebrow">PREFERENCES</div><h1>Settings</h1><p>Workspace configuration.</p></div></div><section class="panel settings-placeholder"><div class="setting-row"><div><strong>Automation connection</strong><p>n8n webhook connection will be configured after the UI is ready.</p></div><span class="status-tag neutral">Not connected</span></div><div class="setting-row"><div><strong>AI extraction</strong><p>Gemini AI integration will be added in the workflow stage.</p></div><span class="status-tag neutral">Not connected</span></div><div class="setting-row"><div><strong>Database</strong><p>Supabase storage will be configured in the next stage.</p></div><span class="status-tag neutral">Not connected</span></div></section></section>
+
+      <footer class="footer">InvoiceFlow <span>·</span> Intelligent invoice processing workspace <span class="footer-right">UI prototype · Demo data</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
