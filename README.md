@@ -64,6 +64,20 @@ ai-powered-invoice-automation/
 
 API keys, access tokens, database passwords, and confidential invoice documents are not included in this repository.
 
+## Project Screenshots
+
+### Invoice Dashboard
+![Invoice Dashboard](screenshots/dashboard.png)
+
+### Invoice Upload
+![Invoice Upload](screenshots/invoice-upload.png)
+
+### n8n Workflow
+![Invoice Workflow](screenshots/invoice-workflow.png)
+
+### Approval Queue
+![Approval Queue](screenshots/approval-queue.png)
+
 ## Author
 
 Anuj Singh
