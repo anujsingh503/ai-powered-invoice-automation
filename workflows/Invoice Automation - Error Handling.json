@@ -1,0 +1,85 @@
+{
+  "name": "Invoice Automation - Error Handling",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f17a8f39-ce6c-4d3b-8699-89735c76382b",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "tableId": "invoice_error_logs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "workflow_name",
+              "fieldValue": "={{ $json.workflow.name }}"
+            },
+            {
+              "fieldId": "error_message",
+              "fieldValue": "={{ $json.execution.error.message }}"
+            },
+            {
+              "fieldId": "failed_node",
+              "fieldValue": "={{ $json.execution.lastNodeExecuted }}"
+            },
+            {
+              "fieldId": "execution_id",
+              "fieldValue": "={{ $json.execution.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5194f300-646c-430f-bd40-a412315d9b2d",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SURIjQAfQr6lp76a",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "versionId": "4c545b41-73da-43e6-80eb-bbc6106e7d91",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fbf22b2e84855209db76807778282ae571cf4de59e0a9da7a29773489335e046"
+  },
+  "nodeGroups": [],
+  "id": "tEOPx7pBbY2RXlne",
+  "tags": []
+}

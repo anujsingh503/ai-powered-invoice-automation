@@ -1,0 +1,101 @@
+{
+  "name": "Invoice Dashboard - Fetch Invoices",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "get-invoices",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "a216faf8-5c92-4942-9555-b0974fd37594",
+      "name": "Webhook",
+      "webhookId": "7ad4e75b-984f-43e9-80f9-66472a8806cd"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "invoices",
+        "filters": {
+          "conditions": []
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -80
+      ],
+      "id": "8c2e80e5-1256-4481-b3cf-5c64310201d1",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SURIjQAfQr6lp76a",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $input.all().map(item => item.json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -32,
+        -80
+      ],
+      "id": "736d005e-7840-4663-8814-8f373e59d6d6",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "tEOPx7pBbY2RXlne",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "versionId": "d133d4d1-e96f-4e00-a6cd-8dc68f6aaaf7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fbf22b2e84855209db76807778282ae571cf4de59e0a9da7a29773489335e046"
+  },
+  "nodeGroups": [],
+  "id": "2tbRw23Kn9T2cSS4",
+  "tags": []
+}

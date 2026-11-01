@@ -1,0 +1,116 @@
+{
+  "name": "Invoice Approval - Update Status",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-invoice-status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        -80
+      ],
+      "id": "45a4dbce-1c01-44d1-8b6c-e68b13e96909",
+      "name": "Webhook",
+      "webhookId": "0ae7f95a-3484-4363-98ac-ab845fcdaf63"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "invoices",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.body.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "approval_status",
+              "fieldValue": "={{ $json.body.status }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "8015834a-2940-4a32-9144-303703470dce",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SURIjQAfQr6lp76a",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Invoice status updated successfully\" } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        64,
+        -80
+      ],
+      "id": "dd4009d0-1f52-426b-b86b-0d4709573b9b",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "tEOPx7pBbY2RXlne",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "versionId": "eeed2f85-9b54-42ff-ab86-47a67c9926dd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fbf22b2e84855209db76807778282ae571cf4de59e0a9da7a29773489335e046"
+  },
+  "nodeGroups": [],
+  "id": "l5i34Xiyqt31lWdM",
+  "tags": []
+}

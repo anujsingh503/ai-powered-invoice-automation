@@ -1,0 +1,200 @@
+{
+  "name": "AI-Powered Intelligent Invoice Processing & Approval Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoice-upload",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        -80
+      ],
+      "id": "0ea65d0d-7623-43a5-94d2-dc3253abd4a1",
+      "name": "Webhook",
+      "webhookId": "e4b326c4-30c0-4919-aa0a-f535f6f37b7a"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Invoice processed and saved successfully\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        336,
+        -80
+      ],
+      "id": "8f1e4d3f-022c-4687-98c5-7bfcf11fb9ba",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -416,
+        -80
+      ],
+      "id": "1d12a76e-e92e-4f36-8ace-f26a6ef834cb",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite",
+          "mode": "list",
+          "cachedResultName": "Gemini 3.1 Flash Lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert invoice data extraction AI.\n\nExtract invoice information from the following PDF text.\n\nReturn ONLY valid JSON. Do not include markdown or explanations.\n\nExtract these fields:\n- invoice_number\n- vendor_name\n- vendor_gstin\n- invoice_date\n- due_date\n- buyer_name\n- buyer_gstin\n- subtotal\n- cgst\n- sgst\n- igst\n- total_amount\n- currency\n- line_items (array containing item_name, quantity, unit_price, amount)\n\nIf any field is missing, use null.\nDo not guess or invent information.\n\nInvoice PDF Text:\n{{ $json.text }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        -256,
+        -80
+      ],
+      "id": "2115dbfa-248a-457c-a86f-555b6aa9a719",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mC5AUn9ipFf6eHOV",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst responseText = $input.first().json.content.parts[0].text;\n\nconst invoice = JSON.parse(responseText);\n\nconst webhookData = $('Webhook').first().binary.data0;\n\ninvoice.file_name = webhookData.fileName;\n\nreturn [\n  {\n    json: invoice\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        32,
+        -80
+      ],
+      "id": "46a13d2e-2dec-4c17-a9b4-1fc2d274c5da",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "tableId": "invoices",
+        "dataToSend": "autoMapInputData"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -80
+      ],
+      "id": "b44cf6f7-71fc-43bc-b36d-53ed30b02409",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "SURIjQAfQr6lp76a",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true,
+    "errorWorkflow": "tEOPx7pBbY2RXlne"
+  },
+  "versionId": "23af167f-1c41-4f87-8eb8-43431d9c1818",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fbf22b2e84855209db76807778282ae571cf4de59e0a9da7a29773489335e046"
+  },
+  "nodeGroups": [],
+  "id": "PgyeRWSknIn2nWEo",
+  "tags": []
+}
